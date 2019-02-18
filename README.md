@@ -1,9 +1,9 @@
 # php-FTP-implicit-ssl-tls
-Simple class for cURL functions to transfer an ASCII file over FTP with implicit SSL/TLS
+Simple class for cURL functions to transfer an ASCII file over FTP with implicit SSL/TLS<br />
 Forked from: https://github.com/nalindaDJ/php-FTP-implicit-ssl-tls/blob/master/class-ftp-implicit-ssl-tls.php
 
 ## My contribute...
-In addition to initial release, I added some new functions to obtain a **full working FTPS client**.
+In addition to initial release, I added some new functions to obtain a **full working FTPS client**.<br />
 Some "throw new Exception" were removed, in favour of boolean value return.
 
 ## Donation
