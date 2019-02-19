@@ -6,10 +6,8 @@ TL;DW; (Too Long; Didn't Write)<br />
 Simple class for cURL functions to transfer an ASCII file over FTP with implicit SSL/TLS<br />
 
 ## My contribute...
-I added some new functions to obtain a **working FTPS client** with almost all useful/needed function.<br />
+I added some new functions to obtain a **working FTPS client** with almost all useful/needed function by most developers. This class works perfectly with **Aruba DocFly** service, to automate files upload by FTP. On 2019-01-01 the italian burocracy introduced the obligation to archive invoices to digitally signed supports, hosted by certified companies.
 Some "throw new Exception" were removed, in favour of boolean value return.<br />
-<br />
-(forked from <a href="https://github.com/nalindaDJ/php-FTP-implicit-ssl-tls/blob/master/class-ftp-implicit-ssl-tls.php" target="_forked">here</a>)
 
 ## Donation
 If this script useful, please offer me a beer ;-)<br />
