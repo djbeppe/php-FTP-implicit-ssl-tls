@@ -1,4 +1,8 @@
-# FTP-implicit-ssl-tls PHP client
+## Who Am I
+TL;DW; (Too Long; Didn't Write)<br />
+<a href="https://www.giuseppedelduca.it">https://www.giuseppedelduca.it</a>
+
+## FTP-implicit-ssl-tls PHP client
 Simple class for cURL functions to transfer an ASCII file over FTP with implicit SSL/TLS<br />
 
 ## My contribute...
