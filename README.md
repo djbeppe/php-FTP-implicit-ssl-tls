@@ -11,6 +11,6 @@ Some "throw new Exception" were removed, in favour of boolean value return.<br /
 
 ## Donation
 If this script useful, please offer me a beer ;-)<br />
-...I know you'll save lots of headache/time/money/boss-rage, be grateful!
+...I know you'll save lots of headache/time/money/blasfemy/boss-rage, be grateful!
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FVWMLXE4KCFSE&source=url)
