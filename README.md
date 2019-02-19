@@ -1,3 +1,5 @@
+<img src="https://dd-cdn.multiscreensite.com/flags/flags_iso/32/it.png" />
+
 ## Chi sono
 TL;DW; (Too Long; Didn't Write)<br />
 <a href="https://www.giuseppedelduca.it">https://www.giuseppedelduca.it</a>
@@ -18,6 +20,7 @@ Sono sicuro di averti fatto risparmiare molti mal di testa, tempo, soldi, imprec
 
 --------------------------
 
+<img src="https://dd-cdn.multiscreensite.com/flags/flags_iso/32/gb.png" />
 
 ## Who Am I
 TL;DW; (Too Long; Didn't Write)<br />
