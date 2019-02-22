@@ -148,11 +148,14 @@ class cs_ftps_implicit {
 
         if(!$remote_name || !strlen($remote_name)) $remote_name = basename($local_file);
 
-        echo "\nUPLOAD: ".$local_file." => ".$this->url.$remote_name."\n";
+        echo "\nUPLOAD FILE: ".$local_file." => ".$this->url.$remote_name."\n";
 
 		// set destination
-    	if ( ! curl_setopt( $this->curl_handle, CURLOPT_URL, $this->url . $remote_name ))
-			throw new Exception ( "Could not set cURL file name: $remote_name" );
+        if ( ! curl_setopt( $this->curl_handle, CURLOPT_URL, $this->url . $remote_name )) {
+            echo "\n\tERROR: could not set cURL file name: ".$remote_name;
+            // throw new Exception ( "Could not set cURL file name: $remote_name" );
+            return false;
+        }
 
         if ($stream = fopen($local_file, 'r')) {
             curl_setopt($this->curl_handle, CURLOPT_UPLOAD, 1);
@@ -160,11 +163,15 @@ class cs_ftps_implicit {
         }
 
 		// upload file
-		if ( ! curl_exec( $this->curl_handle ) )
-			throw new Exception( sprintf( 'Could not upload file. cURL Error: [%s] - %s', curl_errno( $this->curl_handle ), curl_error( $this->curl_handle ) ) );
+		if ( ! curl_exec( $this->curl_handle ) ) {
+            echo "\n\tERROR: could not upload file. cURL Error: [".curl_errno( $this->curl_handle )."] - ".curl_error( $this->curl_handle );
+            // throw new Exception( sprintf( 'Could not upload file. cURL Error: [%s] - %s', curl_errno( $this->curl_handle ), curl_error( $this->curl_handle ) ) );
+            return false;
+        }
 
 		// close the stream handle
 		fclose( $stream );
+        return true;
     }
 
 
@@ -179,7 +186,8 @@ class cs_ftps_implicit {
 	 */
 	public function upload_stream( $file_content, $remote_name ) {
         $this->reset_curl_opt();
-        echo "\nSTREAM: ".$file_content." => ".$this->url.$remote_name."\n";
+        // echo "\nUPLOAD STREAM to: ".$file_content." => ".$this->url.$remote_name."\n";
+        echo "\nUPLOAD STREAM to => ".$this->url.$remote_name."\n";
 
 		// set destination
     	if ( ! curl_setopt( $this->curl_handle, CURLOPT_URL, $this->url . $remote_name ))
@@ -189,8 +197,11 @@ class cs_ftps_implicit {
 		$stream = fopen( 'php://temp', 'w+' );
 
 		// check for valid stream handle
-		if ( ! $stream )
-			throw new Exception( 'Could not open php://temp for writing.' );
+		if ( ! $stream ) {
+            echo "\n\tERROR: could not open php://temp for writing";
+            // throw new Exception( 'Could not open php://temp for writing.' );
+            return false;
+        }
 
 		// write file into the temporary stream
 		fwrite( $stream, $file_content );
@@ -199,8 +210,11 @@ class cs_ftps_implicit {
 		rewind( $stream );
 
 		// set the file to be uploaded
-		if ( ! curl_setopt( $this->curl_handle, CURLOPT_INFILE, $stream ) )
-			throw new Exception( "Could not load file $remote_name" );
+		if ( ! curl_setopt( $this->curl_handle, CURLOPT_INFILE, $stream ) ) {
+            echo "\n\tERROR: could not load file ".$remote_name;
+            // throw new Exception( "Could not load file $remote_name" );
+            return false;
+        }
 
 		// upload file
 		if ( ! curl_exec( $this->curl_handle ) )
@@ -208,6 +222,7 @@ class cs_ftps_implicit {
 
 		// close the stream handle
 		fclose( $stream );
+        return true;
     }    
     
   
