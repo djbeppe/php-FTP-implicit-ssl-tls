@@ -67,9 +67,9 @@ class cs_ftps_implicit {
 
 		// check for blank server
 		if ( ! $server )
-            throw new Exception( 'FTP Server is blank.' );
-        else
-            $this->server = $server;
+		    throw new Exception( 'FTP Server is blank.' );
+		else
+		    $this->server = $server;
 
 		// check for blank port
 		if ( ! $port )
@@ -82,28 +82,29 @@ class cs_ftps_implicit {
         $this->url = "ftps://{$this->server}{$this->initial_path}";
         echo "\nCONNECT TO: ".$this->url."\n";
 
-		// setup connection
-		$this->curl_handle = curl_init();
+	// setup connection
+	$this->curl_handle = curl_init();
 
-		// check for successful connection
-		if ( ! $this->curl_handle )
-			throw new Exception( 'Could not initialize cURL.' );
+	// check for successful connection
+	if ( ! $this->curl_handle )
+		throw new Exception( 'Could not initialize cURL.' );
 
-		// connection options
-		$options = array(
-			CURLOPT_USERPWD        => $username . ':' . $password,
-			CURLOPT_SSL_VERIFYPEER => false, // don't verify SSL
-			CURLOPT_SSL_VERIFYHOST => false,
-			CURLOPT_FTP_SSL        => CURLFTPSSL_ALL, // require SSL For both control and data connections
-			CURLOPT_FTPSSLAUTH     => CURLFTPAUTH_DEFAULT, // let cURL choose the FTP authentication method (either SSL or TLS)
-			CURLOPT_UPLOAD         => true,
-			CURLOPT_PORT           => $port,
-			CURLOPT_TIMEOUT        => 30,
-		);
+	// connection options
+	$options = array(
+		CURLOPT_USERPWD        => $username . ':' . $password,
+		CURLOPT_SSL_VERIFYPEER => false, // don't verify SSL
+		CURLOPT_SSL_VERIFYHOST => false,
+		CURLOPT_FTP_SSL        => CURLFTPSSL_ALL, // require SSL For both control and data connections
+		CURLOPT_FTPSSLAUTH     => CURLFTPAUTH_DEFAULT, // let cURL choose the FTP authentication method (either SSL or TLS)
+		CURLOPT_BINARYTRANSFER => true,
+		CURLOPT_UPLOAD         => true,
+		CURLOPT_PORT           => $port,
+		CURLOPT_TIMEOUT        => 30,
+	);
 
-		// cURL FTP enables passive mode by default, so disable it by enabling the PORT command and allowing cURL to select the IP address for the data connection
-		if ( ! $passive_mode )
-			$options[ CURLOPT_FTPPORT ] = '-';
+	// cURL FTP enables passive mode by default, so disable it by enabling the PORT command and allowing cURL to select the IP address for the data connection
+	if ( ! $passive_mode )
+		$options[ CURLOPT_FTPPORT ] = '-';
 
         // save default opts
         $this->curl_default_opt = $options;
@@ -127,23 +128,23 @@ class cs_ftps_implicit {
 
         // reset connection options
         // use foreach so useful errors can be caught instead of a generic "cannot set options" error with curl_setopt_array()
-		foreach ( $this->curl_default_opt as $option_name => $option_value ) {
+	foreach ( $this->curl_default_opt as $option_name => $option_value ) {
 
-			if ( ! curl_setopt( $this->curl_handle, $option_name, $option_value ) )
-				throw new Exception( sprintf( 'Could not set cURL option: %s', $option_name ) );
-		}        
+		if ( ! curl_setopt( $this->curl_handle, $option_name, $option_value ) )
+			throw new Exception( sprintf( 'Could not set cURL option: %s', $option_name ) );
+	}        
     }
     
-	/**
-	 * Upload file to remote host
-	 *
-	 * @access public
-	 * @since 1.5
+    /**
+     * Upload file to remote host
+     *
+     * @access public
+     * @since 1.5
      * @param string $local_file - local file to upload
-	 * @param string $remote_name - remote file name to create
-	 * @throws Exception - Open remote file failure or write data failure
-	 */
-	public function upload_file( $local_file, $remote_name=false ) {
+     * @param string $remote_name - remote file name to create
+     * @throws Exception - Open remote file failure or write data failure
+     */
+    public function upload_file( $local_file, $remote_name=false ) {
         $this->reset_curl_opt();
 
         if(!$remote_name || !strlen($remote_name)) $remote_name = basename($local_file);
@@ -175,16 +176,16 @@ class cs_ftps_implicit {
     }
 
 
-	/**
-	 * Write file into temporary memory and upload stream to remote file
-	 *
-	 * @access public
-	 * @since 1.5
-	 * @param string $remote_name - remote file name to create
-	 * @param string $file_content - file content to upload
-	 * @throws Exception - Open remote file failure or write data failure
-	 */
-	public function upload_stream( $file_content, $remote_name ) {
+    /**
+     * Write file into temporary memory and upload stream to remote file
+     *
+     * @access public
+     * @since 1.5
+     * @param string $remote_name - remote file name to create
+     * @param string $file_content - file content to upload
+     * @throws Exception - Open remote file failure or write data failure
+     */
+    public function upload_stream( $file_content, $remote_name ) {
         $this->reset_curl_opt();
         // echo "\nUPLOAD STREAM to: ".$file_content." => ".$this->url.$remote_name."\n";
         echo "\nUPLOAD STREAM to => ".$this->url.$remote_name."\n";
@@ -193,47 +194,47 @@ class cs_ftps_implicit {
     	if ( ! curl_setopt( $this->curl_handle, CURLOPT_URL, $this->url . $remote_name ))
 			throw new Exception ( "Could not set cURL file name: $remote_name" );
 
-		// open memory stream for writing
-		$stream = fopen( 'php://temp', 'w+' );
+	// open memory stream for writing
+	$stream = fopen( 'php://temp', 'w+' );
 
-		// check for valid stream handle
-		if ( ! $stream ) {
+	// check for valid stream handle
+	if ( ! $stream ) {
             echo "\n\tERROR: could not open php://temp for writing";
             // throw new Exception( 'Could not open php://temp for writing.' );
             return false;
         }
 
-		// write file into the temporary stream
-		fwrite( $stream, $file_content );
+	// write file into the temporary stream
+	fwrite( $stream, $file_content );
 
-		// rewind the stream pointer
-		rewind( $stream );
+	// rewind the stream pointer
+	rewind( $stream );
 
-		// set the file to be uploaded
-		if ( ! curl_setopt( $this->curl_handle, CURLOPT_INFILE, $stream ) ) {
+	// set the file to be uploaded
+	if ( ! curl_setopt( $this->curl_handle, CURLOPT_INFILE, $stream ) ) {
             echo "\n\tERROR: could not load file ".$remote_name;
             // throw new Exception( "Could not load file $remote_name" );
             return false;
         }
 
-		// upload file
-		if ( ! curl_exec( $this->curl_handle ) )
-			throw new Exception( sprintf( 'Could not upload file. cURL Error: [%s] - %s', curl_errno( $this->curl_handle ), curl_error( $this->curl_handle ) ) );
+	// upload file
+	if ( ! curl_exec( $this->curl_handle ) )
+		throw new Exception( sprintf( 'Could not upload file. cURL Error: [%s] - %s', curl_errno( $this->curl_handle ), curl_error( $this->curl_handle ) ) );
 
-		// close the stream handle
-		fclose( $stream );
+	// close the stream handle
+	fclose( $stream );
         return true;
     }    
     
   
-	/**
+    /**
      * Download remote file to the given location
      * 
      * @param string $remote_name - remote file name (path relative to cwd)
      * @param string $local_path - local destination path
      * @return boolean - true on success, false elsewhere
-	 */
-	public function download( $remote_name, $local_path='/tmp/'){
+     */
+    public function download( $remote_name, $local_path='/tmp/'){
         $this->reset_curl_opt();
         echo "\nDOWNLOAD: ".$this->url.$remote_name." => ".$local_path."\n";
 
@@ -245,14 +246,14 @@ class cs_ftps_implicit {
 		curl_setopt( $this->curl_handle, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt( $this->curl_handle, CURLOPT_FILE, $file);
         
-		$result = curl_exec($this->curl_handle);
+	$result = curl_exec($this->curl_handle);
         fclose($file);
         
-		if( strlen($result) ){
-			return $result;
-		} else {
-			return false;
-		}
+	if( strlen($result) ){
+		return $result;
+	} else {
+		return false;
+	}
     }
 
     /**
@@ -379,13 +380,13 @@ class cs_ftps_implicit {
         return true;
     }
 
-	/**
+    /**
      * List files/folders in current working directory
      * 
-	 * @return array of file/directory names
-	 * @throws Exception (removed)
-	 */
-	public function remote_file_list(){
+     * @return array of file/directory names
+     * @throws Exception (removed)
+     */
+    public function remote_file_list(){
         $this->reset_curl_opt();
 
         echo "\nLS: ".$this->url."\n";
@@ -414,13 +415,13 @@ class cs_ftps_implicit {
 		}
     }    
 
-	/**
-	 * Get remote file size - (usefull to create a progress bar)
+    /**
+     * Get remote file size - (usefull to create a progress bar)
      * 
      * @param string $file_name - file to get size of
      * @return int - file size in bytes
-	 */
-	public function remote_file_size($file_name){
+     */
+    public function remote_file_size($file_name){
         echo "\nSIZE: ".$this->url . $file_name."\n";
 		$size=0;
 		curl_setopt( $this->curl_handle, CURLOPT_URL, $this->url . $file_name);
@@ -435,7 +436,7 @@ class cs_ftps_implicit {
 		return $size;
     } 
     
-	/**
+    /**
      * Delete remote file
      * 
      * @param string $file_name - file (or folder) to be deleted
@@ -459,12 +460,12 @@ class cs_ftps_implicit {
             return false; // user asked to delete non existent path/file
         }
 		
-		if( !in_array( $file_name, $files ) ){
-			return true;
-		} else {
-			return false;
-		}
+	if( !in_array( $file_name, $files ) ){
+		return true;
+	} else {
+		return false;
 	}
+    }
     
 	/**
      * Create remote folder
@@ -486,12 +487,10 @@ class cs_ftps_implicit {
 
         echo "\nMKDIR: ".$destination."\n";
 
-
-
-		curl_setopt( $this->curl_handle, CURLOPT_URL, $destination);
-		curl_setopt( $this->curl_handle, CURLOPT_UPLOAD, false);
-		curl_setopt( $this->curl_handle, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt( $this->curl_handle, CURLOPT_HEADER, false);
+	curl_setopt( $this->curl_handle, CURLOPT_URL, $destination);
+	curl_setopt( $this->curl_handle, CURLOPT_UPLOAD, false);
+	curl_setopt( $this->curl_handle, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt( $this->curl_handle, CURLOPT_HEADER, false);
         curl_setopt( $this->curl_handle, CURLOPT_FTP_CREATE_MISSING_DIRS, true );
         
         $result = curl_exec( $this->curl_handle );
@@ -501,18 +500,17 @@ class cs_ftps_implicit {
         } else {
             return $this->url . $folder_name; // folder created
         }
-	}
+    }
 
-	/**
-	 * Attempt to close cURL handle
-	 *  Note - errors suppressed here as they are not useful
-	 *
-	 * @access public
-	 * @since 1.0
-	 */
-	public function __destruct() {
-
-		@curl_close( $this->curl_handle );
-	}
+    /**
+     * Attempt to close cURL handle
+     *  Note - errors suppressed here as they are not useful
+     *
+     * @access public
+     * @since 1.0
+     */
+    public function __destruct() {
+	@curl_close( $this->curl_handle );
+    }
 
 }
