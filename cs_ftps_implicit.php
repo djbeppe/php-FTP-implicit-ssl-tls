@@ -25,16 +25,16 @@
 
 class cs_ftps_implicit {
 
-	/** @var resource cURL resource handle */
-	private $curl_handle;
+    /** @var resource cURL resource handle */
+    private $curl_handle;
 
-	/** @var string cURL URL for upload */
-	private $url;
+    /** @var string cURL URL for upload */
+    private $url;
 
-	/** @var string cURL server host */
-	private $server;
+    /** @var string cURL server host */
+    private $server;
 
-	/** @var string cURL initial path (ftp root) */
+    /** @var string cURL initial path (ftp root) */
     private $initial_path;
     
     /** @var array cURL default opt, so we can reset opts before each command */
